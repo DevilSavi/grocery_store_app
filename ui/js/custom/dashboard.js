@@ -17,10 +17,15 @@ $(function () {
                         <td>${order.customer_name}</td>
                         <td>${order.total.toFixed(2)} Rs</td>
                         <td><span class="btn btn-xs btn-danger view-order">View order</span>
-                    </tr>;`
+                    </tr>`;
             });
             table += '<tr><td colspan="3" style="text-align: end"><b>Total</b></td><td><b>'+ totalCost.toFixed(2) +' Rs</b></td></tr>';
             $("table").find('tbody').empty().html(table);
         }
     });
 });
+
+$(document).on("click", ".view-order", function() {
+    var order_id = $(this).closest("tr").data("id");
+    window.location.href = "order-details.html?order_id=" + order_id;
+})

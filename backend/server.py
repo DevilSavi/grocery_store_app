@@ -4,6 +4,7 @@ import product_dao
 import uom_dao 
 import json
 import order_dao
+import orderDetail_dao
 from sql_connection import get_sql_connection
 
 
@@ -76,6 +77,15 @@ def insert_order():
 @app.route('/getAllOrders', methods=['GET'])
 def get_all_orders():
     response = order_dao.get_all_orders(connection)
+    response = jsonify(response)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+@app.route('/getOrderDetails', methods=['GET'])
+def get_order_details():
+    order_id = request.args.get('order_id')
+
+    response = orderDetail_dao.get_order_details(connection, order_id)
     response = jsonify(response)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
