@@ -110,6 +110,70 @@ def insert_uom():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+@app.route('/insertOrderDetails', methods=['POST'])
+def insert_order_details():
+    request_payload = json.loads(request.form['data'])
+    order_id = orderDetail_dao.insert_new_order_detail(
+        connection,
+        request_payload
+    )
+    orderDetail_dao.update_order_total(connection, order_id)
+    response = jsonify({
+        'order_id': order_id
+    })
+    response.headers.add(
+        'Access-Control-Allow-Origin',
+        '*'
+    )
+    return response
+
+@app.route('/deleteOrderDetail', methods=['POST'])
+def delete_order_detail():
+    order_id = request.form['order_id']
+    product_id = request.form['product_id']
+
+    return_id = orderDetail_dao.delete_order_detail(
+        connection,
+        order_id,
+        product_id
+    )
+
+    orderDetail_dao.update_order_total(
+        connection,
+        order_id
+    )
+
+    response = jsonify({
+        'order_id': return_id
+    })
+
+    response.headers.add(
+        'Access-Control-Allow-Origin',
+        '*'
+    )
+
+    return response
+
+@app.route('/updateOrderDetail', methods=['POST'])
+def update_order_detail():
+    request_payload = json.loads(request.form['data'])
+    order_id = orderDetail_dao.update_order_detail(
+        connection,
+        request_payload
+    )
+    orderDetail_dao.update_order_total(
+        connection,
+        order_id
+    )
+    response = jsonify({
+        'order_id': order_id
+    })
+    response.headers.add(
+        'Access-Control-Allow-Origin',
+        '*'
+    )
+    return response
+
 if __name__ == "__main__":
     print("Starting Python Flask Server For grocery store Management system")
     app.run(port=5000)
